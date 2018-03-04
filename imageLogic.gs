@@ -1,8 +1,12 @@
 function setImage(jsonImageData){
   var imageSlide = undefined;
+  
   var imageProperties = getSpecificSavedProperties("imageProperties");
+  
   var image = createImageFromBlob(jsonImageData["image"]);
   var slide = SlidesApp.getActivePresentation().getSelection().getCurrentPage();
+  
+  // if the equation was not linked
   if(jsonImageData["linkedMathEquation"] != ""){
     var imageObjectId = jsonImageData["linkedMathEquation"];
     if( imageObjectId == undefined)
@@ -15,19 +19,24 @@ function setImage(jsonImageData){
       imageSlide = findImageSlide(imageObjectId)
       imageSlide.replace(image)
     }
-  }
+  } // if the equation was linked
   else{
     Logger.log("New Image")
     imageSlide = slide.insertImage(image);
   }
 
+  // in all cases update the meta data
+  // THE OLD WAY
+//  imageProperties[imageSlide.getObjectId()] = {
+//    "equation": jsonImageData["mathEquation"],
+//    "equationColor": jsonImageData["mathEquationColor"]
+//  }
+//  savePropertie("imageProperties", imageProperties)
   
-  imageProperties[imageSlide.getObjectId()] = {
-    "equation": jsonImageData["mathEquation"],
-    "equationColor": jsonImageData["mathEquationColor"]
-  }
+  // THE NEW WAY
+  var new_string = ' € ' + jsonImageData["mathEquation"] + ' € ' + jsonImageData["mathEquationColor"]
+  imageSlide.setLinkUrl(new_string)
   
-  savePropertie("imageProperties", imageProperties)
 }
 
 function createImageFromBlob(blob){
@@ -64,19 +73,40 @@ function getLinkedToImage(){
   else if(pageElements.length >= 2)
     throw "can only select one item"
   var image = pageElements[0].asImage()
-  var imageObjectFromImageProperties = imageProperties[image.getObjectId()]
-  if(imageObjectFromImageProperties == undefined)
+  
+  //Loading THE OLD WAY
+//  
+//  var imageObjectFromImageProperties = imageProperties[image.getObjectId()]
+//  if(imageObjectFromImageProperties == undefined)
+//    throw "not a equation"
+//  var color = "#000000"
+//
+//  if (imageObjectFromImageProperties["equationColor"] != undefined &&
+//      imageObjectFromImageProperties["equationColor"] != null){
+//    color = imageObjectFromImageProperties["equationColor"];
+//  }
+//  
+//  var eqn = imageObjectFromImageProperties["equation"]
+  //Loading THE NEW WAY
+  
+  var linktext = image.getLink().getUrl()
+  var linkarray = linktext.split(" € ")
+  if ( (linkarray.length < 2) || (linkarray.length > 3) ){
     throw "not a equation"
-  var color = "#000000"
-
-  if (imageObjectFromImageProperties["equationColor"] != undefined &&
-      imageObjectFromImageProperties["equationColor"] != null){
-    color = imageObjectFromImageProperties["equationColor"];
   }
+  
+  // if we do not have colour information for some reason
+  if( linkarray.length == 2 ){
+    color = "#000000"
+  } else {
+    color =  linkarray[2]
+  }
+  
+  eqn = linkarray[1]
 
   return {
       "objectId": image.getObjectId(),
-      "equation": imageObjectFromImageProperties["equation"],
+      "equation": eqn,
       "equationColor": color
   }
 }
