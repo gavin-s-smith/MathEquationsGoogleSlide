@@ -29,7 +29,7 @@ function onOpen() {
 
 function showSidebar() {
   
-  var html = doGet().setTitle('Math Solver').setWidth(300);
+  var html = doGet().setTitle('Latex Equations').setWidth(300);
   SlidesApp.getUi() // Or DocumentApp or FormApp.
       .showSidebar(html);
   

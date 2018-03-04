@@ -35,7 +35,23 @@ function setImage(jsonImageData){
   
   // THE NEW WAY
   var new_string = ' € ' + jsonImageData["mathEquation"] + ' € ' + jsonImageData["mathEquationColor"]
+  
   imageSlide.setLinkUrl(new_string)
+  
+  // THE NEW NEW WAY
+//  var requests = [{
+//    updatePageElementAltText: {
+//      objectId: imageSlide.getObjectId(),
+//      title: jsonImageData["mathEquationColor"],
+//      description: jsonImageData["mathEquation"],
+//    }
+// 
+//  }];
+//  // Execute the requests.
+//  var batchUpdateResponse = Slides.Presentations.batchUpdate({
+//    requests: requests
+//  }, SlidesApp.getActivePresentation().getId());
+// 
   
 }
 
