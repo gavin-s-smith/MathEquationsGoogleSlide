@@ -12,9 +12,10 @@ function setImage(jsonImageData){
     if( imageObjectId == undefined)
       throw "image does not exist";
     else{
-      imageObject = imageProperties[imageObjectId]
-      if(imageObject == undefined)
-        throw "image is not part of this extension"
+// REMOVED DUE TO NEW METHOD
+      //      imageObject = imageProperties[imageObjectId]
+//      if(imageObject == undefined)
+//        throw "image is not part of this extension"
         
       imageSlide = findImageSlide(imageObjectId)
       imageSlide.replace(image)
@@ -34,6 +35,10 @@ function setImage(jsonImageData){
 //  savePropertie("imageProperties", imageProperties)
   
   // THE NEW WAY
+  
+  
+  
+  
   var new_string = ' € ' + jsonImageData["mathEquation"] + ' € ' + jsonImageData["mathEquationColor"]
   
   imageSlide.setLinkUrl(new_string)
